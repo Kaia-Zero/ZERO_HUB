@@ -15,22 +15,203 @@ local tweening = false
 -- auto farm values --
 local index = 1
  -- rayfield --
- local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
- local Window = Rayfield:CreateWindow({
-   Name = "Build A Boat For Treasure",
-   Icon = 0,
-   LoadingTitle = "Rayfield Interface Suite",
-   LoadingSubtitle = "by Sirius",
-   Theme = "Default",
-   ToggleUIKeybind = "G",
-   DisableRayfieldPrompts = false,
-   DisableBuildWarnings = false,
-   ConfigurationSaving = {
-      Enabled = true,
-      FolderName = "BABFT",
-      FileName = "Build A Boat Config"
-   },
+local repo = "https://raw.githubusercontent.com/deividcomsono/Obsidian/main/"
+local Library = loadstring(game:HttpGet(repo .. "Library.lua"))()
+local Options = Library.Options
+local Toggles = Library.Toggles
+Library:SetDPIScale(85)
+
+-- UI color: white instead of the default purple accent
+pcall(function()
+    Library.Scheme.AccentColor = Color3.fromRGB(255, 255, 255)
+end)
+
+-- ZERO HUB / 3AM style floating open-close button
+local function CreateZeroHUBToggleButton(iconId)
+    local ToggleGui = Instance.new("ScreenGui")
+    ToggleGui.Name = "Build_ZeroHUB_Toggle"
+    ToggleGui.ResetOnSpawn = false
+    ToggleGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    ToggleGui.Parent = game:GetService("CoreGui")
+
+    local ToggleButton = Instance.new("TextButton")
+    ToggleButton.Name = "ToggleButton"
+    ToggleButton.Text = ""
+    ToggleButton.AutoButtonColor = false
+    ToggleButton.Size = UDim2.fromOffset(46, 46)
+    ToggleButton.Position = UDim2.fromOffset(15, 120)
+    ToggleButton.BackgroundColor3 = Color3.fromRGB(18, 12, 14)
+    ToggleButton.BackgroundTransparency = 0.05
+    ToggleButton.ClipsDescendants = true
+    ToggleButton.Parent = ToggleGui
+
+    local Corner = Instance.new("UICorner")
+    Corner.CornerRadius = UDim.new(0, 10)
+    Corner.Parent = ToggleButton
+
+    local Stroke = Instance.new("UIStroke")
+    Stroke.Color = Color3.fromRGB(110, 25, 35)
+    Stroke.Thickness = 1.2
+    Stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    Stroke.Parent = ToggleButton
+
+    local Stroke2 = Instance.new("UIStroke")
+    Stroke2.Color = Color3.fromRGB(140, 30, 45)
+    Stroke2.Thickness = 4
+    Stroke2.Transparency = 0.6
+    Stroke2.Parent = ToggleButton
+
+    local IconFrame = Instance.new("Frame")
+    IconFrame.Size = UDim2.fromScale(0.75, 0.75)
+    IconFrame.Position = UDim2.fromScale(0.125, 0.125)
+    IconFrame.BackgroundTransparency = 1
+    IconFrame.ClipsDescendants = true
+    IconFrame.Parent = ToggleButton
+
+    pcall(function()
+        local customIcon = Library:GetCustomIcon(iconId)
+        if customIcon then
+            local Icon = Instance.new("ImageLabel")
+            Icon.BackgroundTransparency = 1
+            Icon.Image = customIcon.Url
+            Icon.ImageRectOffset = customIcon.ImageRectOffset
+            Icon.ImageRectSize = customIcon.ImageRectSize
+            Icon.Size = UDim2.fromScale(1, 1)
+            Icon.ScaleType = Enum.ScaleType.Fit
+            Icon.Parent = IconFrame
+        end
+    end)
+
+    local TweenService = game:GetService("TweenService")
+    ToggleButton.MouseButton1Click:Connect(function()
+        TweenService:Create(ToggleButton, TweenInfo.new(0.08), {Size = UDim2.fromOffset(40, 40)}):Play()
+        task.wait(0.08)
+        TweenService:Create(ToggleButton, TweenInfo.new(0.08), {Size = UDim2.fromOffset(46, 46)}):Play()
+        Library:Toggle()
+    end)
+    pcall(function() Library:MakeDraggable(ToggleButton, ToggleButton, true) end)
+end
+CreateZeroHUBToggleButton(124116752283304)
+
+local LibraryWindow = Library:CreateWindow({
+    Title = "Build A Boat For Treasure",
+    Center = true,
+    AutoShow = true,
+    Resizable = false,
+    Footer = "Build A Boat For Treasure",
+    Icon = 110450246845485,
+    IconSize = UDim2.fromOffset(40, 40),
+    CornerRadius = 20,
+    AutoLock = false,
+    ShowCustomCursor = false,
+    ShowMobileButtons = false,
+    ToggleKeybind = Enum.KeyCode.LeftControl,
+    Size = UDim2.fromOffset(500, 350),
+    EnableSidebarResize = false,
+    EnableCompacting = true,
+    SidebarCompacted = true,
+    NotifySide = "Right",
+    TabPadding = 2,
+    MenuFadeTime = 0
 })
+
+pcall(function()
+    LibraryWindow:SetBackgroundImage("rbxassetid://94391249583867")
+end)
+
+-- Compatibility adapter: keeps the original Build systems intact while replacing only the UI layer.
+local tabCounter = 0
+local controlCounter = 0
+local function nextId(prefix)
+    controlCounter += 1
+    return prefix .. tostring(controlCounter)
+end
+
+local function makeTab(name, icon)
+    tabCounter += 1
+    local tab = LibraryWindow:AddTab(name, icon or "swords")
+    local group = tab:AddLeftGroupbox(name)
+
+    local adapter = {}
+
+    function adapter:CreateButton(data)
+        local label = type(data) == "table" and (data.Name or "Button") or tostring(data)
+        local callback = type(data) == "table" and data.Callback or nil
+        group:AddButton(label, callback or function() end)
+    end
+
+    function adapter:CreateToggle(data)
+        local label = data.Name or "Toggle"
+        local default = data.CurrentValue
+        if default == nil then default = data.Default end
+        if default == nil then default = false end
+        group:AddToggle(nextId("Toggle"), {
+            Text = label,
+            Default = default,
+            Callback = data.Callback or function() end
+        })
+    end
+
+    function adapter:CreateDropdown(data)
+        local id = nextId("Dropdown")
+        local options = data.Options or {}
+        local current = data.CurrentOption
+        if type(current) == "table" then current = current[1] end
+        local obj = group:AddDropdown(id, {
+            Text = data.Name or "Dropdown",
+            Values = options,
+            Default = current,
+            Multi = false,
+            Callback = function(value)
+                if type(value) == "table" then
+                    data.Callback(value)
+                else
+                    data.Callback({value})
+                end
+            end
+        })
+        return {
+            Refresh = function(_, values)
+                pcall(function() obj:SetValues(values) end)
+                pcall(function() obj:SetValues(values or {}) end)
+            end
+        }
+    end
+
+    function adapter:CreateParagraph(data)
+        local label = group:AddLabel((data.Title or "") .. "\n" .. (data.Content or ""))
+        return {
+            Set = function(_, value)
+                value = value or {}
+                local title = value.Title or data.Title or ""
+                local content = value.Content or ""
+                pcall(function() label:SetText(title .. "\n" .. content) end)
+            end
+        }
+    end
+
+    function adapter:CreateSection(text)
+        group:AddLabel("-- " .. tostring(text) .. " --", true)
+    end
+
+    return adapter
+end
+
+local Rayfield = {}
+function Rayfield:Notify(data)
+    data = data or {}
+    local title = data.Title or data.Name or "Notification"
+    local content = data.Content or ""
+    pcall(function()
+        Library:Notify(title .. (content ~= "" and ("\n" .. content) or ""), data.Duration or 5)
+    end)
+end
+local WindowAdapter = {}
+function WindowAdapter:CreateTab(name, icon)
+    return makeTab(name, icon)
+end
+Window = WindowAdapter
+
 -- list for special blocks like glue that have multiple welds
 local specialList = {"Glue"}
 --paths
@@ -399,7 +580,7 @@ local function getCar() : Model
     return humanoid.SeatPart and humanoid.SeatPart.Parent or nil
 end
 
-local autoBuildTab = Window:CreateTab("Building","rewind")
+local autoBuildTab = Window:CreateTab("Building","hammer")
 
 autoBuildTab:CreateButton({
     Name = "Place Wood Block",
@@ -489,8 +670,10 @@ local pasteStatus = autoBuildTab:CreateParagraph({
 
 -- updater
 task.spawn(function()
-    while task.wait(0.2) do
-        pasteStatus:Set({Title = "Auto Build Progress", Content = tostring(pastePercent) .. "%"})
+    while task.wait(0.5) do
+        pcall(function()
+            pasteStatus:Set({Title = "Auto Build Progress", Content = tostring(pastePercent) .. "%"})
+        end)
     end
 end)
 
@@ -503,7 +686,7 @@ autoBuildTab:CreateToggle({
     end,
 })
 
-local autoFarmTab = Window:CreateTab("Auto Farm","rewind")
+local autoFarmTab = Window:CreateTab("Auto Farm","box")
 
 autoFarmTab:CreateToggle({
     Name = "Auto Farm Toggle",
@@ -513,7 +696,7 @@ autoFarmTab:CreateToggle({
     end,
 })
 
-local funTab = Window:CreateTab("Fun Tab","rewind")
+local funTab = Window:CreateTab("Fun Tab","star")
 
 local firstSeat = nil
 local secondSeat = nil
@@ -729,8 +912,7 @@ funTab:CreateButton({
 
 
 task.spawn(function()
-    while true do
-        task.wait()
+    while task.wait(0.12) do
         if autofarm then
             if not HRP then continue end
             if index == 11 then
@@ -776,8 +958,8 @@ task.spawn(function()
 end)
 
 runService.Heartbeat:Connect(function()
-    if tweening then
-        HRP.Velocity = Vector3.zero
+    if tweening and HRP and HRP.Parent then
+        HRP.AssemblyLinearVelocity = Vector3.zero
     end
 end)
 
@@ -797,5 +979,6 @@ task.spawn(function()
     end
 end)
 
-Rayfield:LoadConfiguration()
-
+pcall(function()
+    if Library and Library.ToggleKeybind then end
+end)
