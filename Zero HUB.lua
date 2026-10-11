@@ -1,4 +1,591 @@
-er) then
+-- ดีใจด้วยนะทีแกะมาถึงนี้ ไอควย
+-- และ ฟาก discord กูด้วย
+-- Zero_HUB 1 - readable function names
+-- Deobfuscated naming pass: function/method identifiers were renamed only.
+-- Runtime logic, control flow, constants, callbacks, and system behavior are preserved.
+-- Original obfuscated names are documented in the mapping below.
+-- Generated from the supplied Zero_HUB 1 source.
+
+-- Function name mapping (obfuscated -> readable):
+-- BHqZ0HDHxU -> AimbotFunction4
+-- BOnOl -> OnPlayerAdded
+-- BX0W_W1NvmN -> HealingFunction
+-- BZOH__p_Mml -> SpearMethod7
+-- BZuIoUNb -> AimbotMethod4
+-- BmN10ZnW1H1Z -> HealingMethod5
+-- Bmvv_ -> RemoveESPEntry
+-- BnQUqIZbU -> ConnectPerkEvent
+-- BqbqDWD1 -> AimbotFunction
+-- BxWQmzu -> SpearMethod3
+-- Bz_q0 -> UIFunction4
+-- BzvZNUpnvInxX -> GetAimOrigin
+-- D0vXpzb -> WatchPerfectLanding
+-- DIppHp -> UpdateCrosshairInput
+-- DUUHIHlX -> CreateAimLaser
+-- DWlbpDIop_X -> ApplyInvisibleVisuals
+-- DlO_nm -> SystemFunction4
+-- DluvXnpmnzHbZ0 -> SetInvisibleEnabled
+-- Dm_wX -> IsGeneratorCompleted
+-- DoWnmpIv -> OnPlayerRemoving
+-- DvZox -> SpearMethod
+-- HIqOZvXnO_ -> HookInvisibleRemoteCalls
+-- HMNMz1_loZm -> ESPPlayerFunction4
+-- HMll0pQNp1z0 -> SetHiddenLeapBypass
+-- HZlNp -> CharacterMethod2
+-- H_MZzo1XDQ0 -> ESPPlayerFunction
+-- H_wUHvlv -> RestoreNoClipParts
+-- Hb_DoqmlXq -> IsVaultPart
+-- HlIumNZ -> CrosshairMethod
+-- Hm1WODp -> SetInvisibleCharacterState
+-- HoObQuulMqZZ -> UpdateImmobileState
+-- IMb_Un -> UIFunction9
+-- INZxQq -> UncacheMapObject
+-- IXnlHbM -> CharacterFunction
+-- IZzxzZbMWwom0v -> ApplyPerformanceBoost
+-- IbuIqQO1ZX -> CreateInstantHealUI
+-- IlDUnIH -> GetActiveBuffSpeed
+-- ImU0wwluwHmIm -> ESPGeneratorFunction7
+-- ImXHm1w -> AimbotFunction5
+-- InxNop0ZZDwDH -> UIFunction3
+-- Iu0ObnxQ -> UIFunction8
+-- MDv_On -> SetLowQualityMaterials
+-- MMMOHZUzlzD -> UIFunction2
+-- MNUXM -> SpearMethod2
+-- MOMbmbUmxO -> CharacterFunction10
+-- MWMXqqqNqmNUoW -> RestorePerformanceSettings
+-- MWQmbXz_0Q -> SystemFunction2
+-- MX1ll0Doxn_poU -> UIFunction7
+-- MXIQn0pvoq -> UseItemRemote
+-- Mnw_mwmZ -> CharacterFunction8
+-- MpqINbuo1luO -> UIMethod2
+-- MzMxv_Zu_o -> UpdatePlayerESP
+-- N0UWOvNoO0qMl -> GetCrosshairScale
+-- NMQQuOx -> HealingMethod8
+-- NMQvHwxW -> SystemFunction6
+-- NNDXquOb1 -> CharacterFunction12
+-- NQUl_0XDozlml -> CharacterFunction2
+-- NUmlqMUQMlO -> DropAllPallets
+-- NZnu1wQQH -> SystemMethod7
+-- NlNmm1OUvqWbu -> SystemFunction3
+-- NnOZvow -> UIFunction6
+-- NpmDZUw -> ActivateKillerHit
+-- Nv0Xwu1Nz_ -> FindAimTarget
+-- NxIuvQ_ -> ShowStartupNotification
+-- OIWUWZOIv1_bMq -> ScaleNotificationElement
+-- OMZ_IWpX0l1MoD -> UIMethod4
+-- OmWlxvnDq -> UpdateWindowESP
+-- OqD0nQv -> GetCameraPosition
+-- OuNoDom1Ubv -> ESPGeneratorFunction3
+-- OxoN_N -> FindVaultPoints
+-- Ozp0xmOo -> ESPGeneratorFunction11
+-- QDDmMWvwMb -> ESPGeneratorFunction12
+-- QDpXH11uMMD -> CreateWindowESP
+-- QHqHWqQuZp -> UpdateScpESP
+-- QMIQImvnlx -> CharacterMethod4
+-- QOw0QUXQ -> SpearMethod4
+-- QblmIqqz0Nw -> ApplyWeather
+-- QbpoZ -> ESPGeneratorFunction5
+-- QnmZbvQ_Q -> ESPGeneratorFunction
+-- Qp1I_xHZ -> UseHealingRemote
+-- QpWZvz -> AimbotMethod5
+-- QqNl_QQlp -> ESPGeneratorFunction4
+-- QwQIzv_ -> FindKillerAnimationFunctions
+-- Qwnzn -> ESPGeneratorFunction2
+-- W0QDlpl0D -> ActivateFakePerk
+-- WIw_znQoH_IZm -> UseCharacterRemote
+-- WM00DbWHo_ZwWI -> SystemMethod5
+-- WMwuqqZ00zM -> UIFunction
+-- WOUDlpnu -> FindUpdateCharacterLookRemote
+-- WUoIHnvUuqQ -> CharacterFunction7
+-- WUububHHvDnuup -> HealingMethod3
+-- WmUMpHXXZN -> VaultFunction3
+-- Wo1UM0 -> FindMobileControl
+-- WuxbHpQIuqvxXX -> PrepareCharacterLookArguments
+-- WvuDQMUu -> ESPPlayerFunction3
+-- WvvNwqMN -> FlashlightMethod
+-- Wxx_bZ -> WatchVaultAttributes
+-- _1HzmvN -> SetLowQualityMaterialProperties
+-- _NWNlwxOvvN0b -> SetKillerPower
+-- _W1ImD10Dopq -> HealingMethod7
+-- _XOHoxH -> CharacterFunction11
+-- _XpwMu_OZNqlU -> RemoveInvisibleHighlight
+-- __qlIO -> CreateESPLabel
+-- __zvHpumD -> SetupMobileControls
+-- _lHbWzq -> CleanupWindowESP
+-- _pZUn -> SystemFunction
+-- _wpMmH1IXwQ_ -> HealingMethod4
+-- bDoM0qqW -> SystemMethod3
+-- bNoNxpMOZZ01Ib -> UpdatePlayerOutline
+-- bUmQmn1bmINH -> UIMethod3
+-- bmquozvqUppzO -> RestorePartMaterials
+-- boHnvNxno1W -> CharacterFunction5
+-- bp0Nl_11DN0q -> HealingMethod6
+-- bqWooxQ -> AnimationMethod
+-- bwIMzqXom -> AimbotFunction3
+-- lHmNn -> CreatePlayerESP
+-- lMxp1zpmDQbU -> UseAbilityRemote
+-- lZwOI0w0 -> CharacterFunction9
+-- lqQbOm -> RemoveAimLaser
+-- oMMqQn1zIDH -> HealingFunction2
+-- oOQUpDDwo -> SystemMethod8
+-- oW1pQHzv -> UpdateObjectESPState
+-- oZNXMwpN -> CachePartMaterials
+-- o_DuX -> SpearFunction
+-- ompwvnNzZwxHl -> UpdateMovementSpeed
+-- p00v1 -> SystemFunction8
+-- p1U1U_lHuOw -> ActivateQuickRecovery
+-- pDq1Xb -> VaultFunction
+-- pDwonuqv -> CreateScpHighlight
+-- pMQMQm1nMZ -> FireCharacterLookUpdate
+-- pUOomlxnu1_II -> SpearFunction2
+-- pWQQQnxqD -> SystemMethod9
+-- pXxODwUWOpxv -> WatchAdrenalineRush
+-- pbzOppqu0Q -> CreateInvisibleTool
+-- pnnxUOH -> HookFallDamage
+-- ppo_mz0HW_IH -> SystemMethod4
+-- pvobxZHvMb1QM -> ESPGeneratorFunction9
+-- pw11zl__mx -> ESPPlayerFunction2
+-- pwmMzvnluNnp -> SpearMethod6
+-- pzOpMpW -> AimbotMethod2
+-- qnwqOq -> SystemFunction5
+-- qq_bwIqzUZnQ -> ESPGeneratorFunction8
+-- qvo1m0uov_0N -> GetHumanoid
+-- runMainScript -> RunMainScript
+-- u1DlIn -> ESPGeneratorFunction6
+-- u1IUoXvDn -> FindNearestVaultPoint
+-- uDNM0Q0zo -> CreateToggleButton
+-- uH_pOboNv_lW -> HandleInvisibleToolInput
+-- uIwzN0vNMx -> SetupWindowRemotes
+-- uMWqxH0 -> CastAimRay
+-- uO_Qn -> SystemMethod10
+-- uObpXUMXp1_Zwu -> AimbotMethod3
+-- umxNp -> VaultFunction2
+-- unMOUX1pN -> RemovePlayerESP
+-- upoMD -> FindWindowPart
+-- uv_nNWZ_Ino_pl -> AimbotMethod6
+-- uwX1UxvbZ1qnQ -> CharacterFunction4
+-- uxWxOn_IUN -> UseItemAction
+-- uxqb10umD_o -> UIFunction5
+-- vDzpW_bWbIw -> NoclipFunction
+-- vMMuQnu -> CharacterFunction6
+-- vMxxUxU_1MuNMH -> FlashlightMethod2
+-- vQWUIInIw_ -> DisconnectPerkConnections
+-- v_zDqOv0 -> ESPGeneratorFunction10
+-- vbmlQUwuo0 -> BuildMapObjectCache
+-- vnZwqzpmxN -> CharacterFunction3
+-- vpbIb -> WatchMapObjects
+-- vqvMmD00wmWl -> SystemFunction7
+-- vqzoxDH -> AimbotFunction2
+-- vwwul1 -> AnimationFunction
+-- vzbHq1Hx1M -> CacheMapObject
+-- w0UN0_QNDzzWM -> SystemMethod6
+-- wDlDblIUM -> UIMethod
+-- wDuZWZb -> UpdateESPDistanceLabels
+-- wHDUobqpHZ -> SpearMethod5
+-- wHlWOmq -> CharacterMethod3
+-- wQU1n0bmmq -> ClearInvisibleTag
+-- wQmZ1qUqpzQQ0 -> ApplyCombatModifiers
+-- wQo_II1XqoOn -> ActivateFlowstateBoost
+-- wl1uqNN_UN -> UpdateGeneratorESP
+-- wnQqwN_nop -> RemoveWindowESP
+-- wvbnm -> RefreshAllPlayerESP
+-- wwM1mxZzMlZnmI -> StartFakePerksHeartbeat
+-- wwxXvIM -> GetCharacter
+
+-- Zero_HUB REBUILT - ALL SYSTEMS
+-- Rebuilt from the deobfuscated source without removing existing systems.
+-- Included systems found in source: Generator, ESP, Auto Aim/Aim, Parry, Animation, Skillcheck,
+-- Player/Character utilities, Gate/Pallet/Object systems, UI/Settings/Config, and other source systems.
+-- NOTE: This file preserves the source logic; it is not a sandbox-safe standalone Lua program.
+
+local  MlbwbqwUwD = { ["wMIUloU" ] = pcall,  [ "pqnlmZWUXx" ]  = print, [ "NnDQubnoH0xz" ] =pairs , ["DDHXmwpp" ] = type, ["lII_pN_ubvn" ] =select, [ "b0lqW" ] = typeof, ["oHxXvuu" ] = ipairs, ["lZMNpHlwo"  ] = rawequal,  [ "HQ00zIOmxm0M" ] =tonumber , [ "WWDxINHqq0" ] =tostring, [ "DxIWvWHHO" ] = next , [ "wvnHuuzMl1Xb"  ] =unpack , ["WmN_0H0OZ1DUW" ] =warn , [ "IMzHlI0NIm" ] =math [ "clamp"  ] , [ "qzWnm0u" ] =math[ "min" ] ,  ["wI_DW_UXnq" ] =math ["ceil" ] , ["lWxnQW_Z" ] =table ["unpack" ] , [ "DxIoqm" ] = math ["floor" ] , [ "W01b0Ilb0bXoQ"  ] =math[ "max" ] , ["BzpMWwM_NWzzH" ] = table[ "insert"  ] , [ "pxQv0z" ] =table[ "remove" ] ,  ["vHulMD_1n_w" ]  = math [ "abs" ] , [ "IWouQQQ" ] = string[ "format" ] , ["qzlquwOlDwp" ] = math["random"  ] , [ "BQmH_lnW_p" ] = string [ "find" ]  }local MU_m1UmlXXDZ=  { }local NuD1bHO_vv=game["GetService"  ] (game, "StarterGui" ) local function ShowStartupNotification(  ) pcall  (function(  ) NuD1bHO_vv:SetCore ( "SendNotification" , { [ "Title" ] = "Zero_HUB"  , [ "Text" ]  = "ขอบคุณที่ใช้สคริปต์ของเรา"  ,  [ "Icon" ] ="rbxassetid://124116752283304"  , ["Duration" ] = ( - 779 +783)  } )end)end ShowStartupNotification( )-- PMHUB launcher UI removed.
+-- The main script now starts automatically when this file is executed.
+function RunMainScript( ) pcall (function ( ) local pUMIq_="https://raw.githubusercontent.com/deividcomsono/Obsidian/main/"local QolwvD0XnWnzM= loadstring( game ["HttpGet"  ] ( game,pUMIq_ .. "Library.lua" ) ) ( )local  QOZpNNvbmDH =loadstring ( game["HttpGet"  ] (game , pUMIq_ .. "addons/ThemeManager.lua" )  ) ( )local ppIHNN = loadstring (game[ "HttpGet" ] ( game , pUMIq_ .. "addons/SaveManager.lua" ) ) ( )QolwvD0XnWnzM[ "MakeBoxPopOut" ] =function( QHlZWIQqqW,qmb_D) if QHlZWIQqqW  then QHlZWIQqqW [ "PoppedOut"  ] = false  QHlZWIQqqW [ "PopOutEnabled" ]  =false QHlZWIQqqW ["PopOutFloat" ] =nil QHlZWIQqqW ["PopOutPlaceholder" ] =nil pcall  ( function( )QHlZWIQqqW [ "SetPoppedOut" ] = function ( ) end QHlZWIQqqW [ "TogglePoppedOut" ] =function ( ) end QHlZWIQqqW ["RefreshPopOutPlaceholder" ] =function ( )end end)end end QolwvD0XnWnzM["Scheme" ] [ "AccentColor"  ] = Color3["fromRGB"  ] ( 255, 255, 255 ) QolwvD0XnWnzM ["Scheme" ] [ "BackgroundColor" ] =Color3["fromRGB"](0, 0, 0)QolwvD0XnWnzM [ "Scheme"  ] ["MainColor" ]  = Color3["fromRGB"](0, 0, 0)QolwvD0XnWnzM ["Scheme" ] [ "OutlineColor" ] =Color3["fromRGB"](255, 255, 255)QolwvD0XnWnzM["Scheme" ] [ "FontColor" ] =Color3["fromRGB"](255, 255, 255)local  function CreateToggleButton (l0lopOpm1u_NH1) local bvqxxuwW0O=Instance["new" ] ("ScreenGui" ) bvqxxuwW0O["Name"  ] = "FallensToggle" bvqxxuwW0O[ "ResetOnSpawn" ]  =false bvqxxuwW0O["ZIndexBehavior"  ] =Enum[ "ZIndexBehavior" ] [ "Sibling"  ]bvqxxuwW0O[ "Parent"  ] = game ["GetService" ] (game ,"CoreGui" )local  _zwbuHM_wxN =Instance ["new"  ] ("TextButton" ) _zwbuHM_wxN["Name" ] = "ToggleButton" _zwbuHM_wxN [ "Text" ]  =""_zwbuHM_wxN[ "AutoButtonColor" ] =false _zwbuHM_wxN ["Size" ] =UDim2["fromOffset"  ] (46,46)_zwbuHM_wxN ["Position" ] = UDim2 [ "fromOffset" ]  (15 ,120 )_zwbuHM_wxN ["BackgroundColor3" ]  = Color3 [ "fromRGB" ]  ( (483- 465 ) , ( - 652 + 664 )  , ( -684+ 698 ) ) _zwbuHM_wxN["BackgroundTransparency" ] =0.05 _zwbuHM_wxN ["ClipsDescendants" ] =true _zwbuHM_wxN[ "Parent" ] =bvqxxuwW0O local IzDbuzx =Instance["new" ]  ("UICorner" ) IzDbuzx[ "CornerRadius"  ] =UDim[ "new" ] (0, 10) IzDbuzx ["Parent"  ] =_zwbuHM_wxN  local IQpMDnbMM=Instance [ "new" ]  ("UIStroke" )IQpMDnbMM["Color" ] =Color3["fromRGB" ] (255, 255, 255)IQpMDnbMM [ "Thickness" ] = 1.2 IQpMDnbMM["ApplyStrokeMode"  ] = Enum["ApplyStrokeMode" ] ["Border" ]IQpMDnbMM [ "Parent" ] = _zwbuHM_wxN local uZOwp0 =Instance [ "new" ] ( "UIStroke" )uZOwp0[ "Color" ]  =Color3[ "fromRGB"  ] (255, 255, 255) uZOwp0[ "Thickness" ]  = ( 620- 616)uZOwp0 [ "Transparency" ] =0.6 uZOwp0["Parent" ] = _zwbuHM_wxN local uXvIDov= Instance["new" ] ("Frame" ) uXvIDov ["Size" ] =UDim2["fromScale" ] ( 0.75,0.75)uXvIDov ["Position" ]  =UDim2 ["fromScale" ] (0.125 ,0.125) uXvIDov["BackgroundTransparency" ] =1 uXvIDov["ClipsDescendants" ] = true  uXvIDov[ "Parent" ] =_zwbuHM_wxN local wUIpmpmQDx=QolwvD0XnWnzM[ "GetCustomIcon" ] ( QolwvD0XnWnzM ,l0lopOpm1u_NH1) if wUIpmpmQDx then local IbpZm0qOU_ = Instance[ "new" ] ( "ImageLabel"  )IbpZm0qOU_ ["BackgroundTransparency" ] = 1  IbpZm0qOU_ [ "Image" ] =wUIpmpmQDx ["Url" ]IbpZm0qOU_["ImageRectOffset" ] = wUIpmpmQDx [ "ImageRectOffset" ] IbpZm0qOU_ ["ImageRectSize" ]  = wUIpmpmQDx["ImageRectSize" ]IbpZm0qOU_["Size" ] = UDim2["fromScale" ]  ( 1, 1 ) IbpZm0qOU_ ["Position" ] = UDim2 ["fromScale" ] ( ( -683+683 ) , ( -238+238) )IbpZm0qOU_[ "ScaleType" ] =Enum [ "ScaleType" ] ["Fit" ] IbpZm0qOU_["Parent" ] = uXvIDov  end _zwbuHM_wxN[ "MouseEnter" ] : Connect( function ( ) game:GetService("TweenService" ) :Create (_zwbuHM_wxN , TweenInfo[ "new" ] (.15 ) , { [ "BackgroundColor3" ] = Color3 ["fromRGB" ] ( 35, ( -51 + 66 ) , 20 )  } ) : Play (  ) end) _zwbuHM_wxN ["MouseLeave" ] : Connect (function( )game:GetService ( "TweenService" ) : Create ( _zwbuHM_wxN,TweenInfo ["new" ] ( .15) , { [ "BackgroundColor3"  ] =Color3[ "fromRGB"  ] ( 18, 12, 14) }  ) :Play ( )end)_zwbuHM_wxN ["MouseButton1Click" ] :Connect (function ( )game : GetService("TweenService" ) :Create ( _zwbuHM_wxN ,TweenInfo[ "new" ] (.08) , {  ["Size"  ] = UDim2["fromOffset" ] (40 , (137-97) ) } ) :Play(  ) task["wait" ] ( .08) game:GetService ( "TweenService"  ) : Create( _zwbuHM_wxN ,TweenInfo[ "new" ] ( .08)  , { ["Size" ] =UDim2 ["fromOffset" ]  ( ( - 860 + 906 ) , ( - 183+229) ) } ) :Play ( )QolwvD0XnWnzM: Toggle (  ) end ) QolwvD0XnWnzM: MakeDraggable( _zwbuHM_wxN ,_zwbuHM_wxN,true )return _zwbuHM_wxN ,bvqxxuwW0O end  CreateToggleButton(124116752283304)local BqN_WWxw0 = QolwvD0XnWnzM["CreateWindow" ]  ( QolwvD0XnWnzM , { [ "Title"  ] = "" , [ "Footer" ] ="เขต Violence District" , ["Icon" ] =110450246845485 , [ "IconSize" ] =UDim2 [ "fromOffset" ] ( (622- 582 ) ,40) ,  [ "CornerRadius" ]  = 20 , [ "NotifySide" ] = "Right" , ["ShowCustomCursor" ] =false, ["ShowMobileButtons" ] =false, [ "ToggleKeybind"  ] = Enum [ "KeyCode" ] [ "LeftControl" ] ,  [ "Size"  ] = UDim2[ "fromOffset" ] ( (606 - 106)  ,  (560 -210) ) , [ "EnableSidebarResize" ]  = false, [ "EnableCompacting" ] =true , ["SidebarCompacted" ] = true, } )pcall(function() BqN_WWxw0:SetBackgroundImage("rbxassetid://94391249583867") end)local OnOquOxzu= { ["info" ] = BqN_WWxw0 [ "AddTab"  ] (BqN_WWxw0,"info"  ,"info" ) , ["Visual" ] = BqN_WWxw0["AddTab"  ] ( BqN_WWxw0 , "ภาพ" ,"eye" ) , ["Combat" ]  =BqN_WWxw0["AddTab" ] (BqN_WWxw0,"ต่อสู้" , "user" ) ,  ["Main" ] = BqN_WWxw0 ["AddTab" ] ( BqN_WWxw0, "หลัก" , "swords" )  , ["Killer" ] = BqN_WWxw0 [ "AddTab" ] ( BqN_WWxw0 ,"ฆาตกร" ,"skull" ) , ["Follow"] = BqN_WWxw0["AddTab"](BqN_WWxw0, "ติดตามผู้เล่น", "users"), ["Music"] = BqN_WWxw0["AddTab"](BqN_WWxw0, "เพลง", "music")  , [ "UISettings" ] =BqN_WWxw0 ["AddTab" ] (BqN_WWxw0, "ตั้งค่า UI" ,"settings-2" ) } local vXmuDWUpu =OnOquOxzu[ "Main" ] :AddLeftGroupbox ( "เล็งเงียบ (ชะตาพลิกผัน)" ,"crosshair" ) local QnuUXmzQ = OnOquOxzu [ "Main" ] :AddLeftGroupbox("เล็งอัตโนมัติ" ,"crosshair" ) local Qo0HDbZmXD_wp=OnOquOxzu[ "Main" ] :AddLeftGroupbox ("ล็อกเป้าด้วยไฟฉาย" ,"bolt" )local MObUmONzqwx1=OnOquOxzu ["Main"  ]  :AddLeftGroupbox( "เป้าเล็ง" ,"crosshair" )local  HqnzDX1=OnOquOxzu[ "Combat" ] : AddLeftGroupbox ( "ข้ามสิ่งกีดขวางเร็ว"  , "bolt" ) local Mm1I0Dw_1xZZm = OnOquOxzu["Combat" ] :AddLeftGroupbox ( "ระบบสิทธิพิเศษปลอม" ,"zap" ) local u0pwbvmwo=OnOquOxzu [ "Main" ] : AddRightGroupbox ( "ฟังก์ชันสำคัญ" , "shield" )local OwQuNnzv=OnOquOxzu[ "Combat" ] :AddRightGroupbox ("ฟังก์ชันช่วยเหลือ"  ,"star" )local QQbUUQHnOWN1bD = OnOquOxzu [ "Combat"  ] : AddRightGroupbox ( "ระบบล่องหน" , "user" ) local _W0nln=OnOquOxzu ["UISettings" ] : AddLeftGroupbox("เมนู" ,"wrench" )
+
+-- Custom UI Background (Settings tab)
+local BackgroundBox = OnOquOxzu["UISettings"]:AddLeftGroupbox("พื้นหลัง UI", "image")
+local BackgroundLocalPath = ""
+local BackgroundUrl = ""
+local BackgroundOriginal = "rbxassetid://94391249583867"
+local BackgroundFileMap = {}
+local BackgroundFolderCandidates = {
+    "Fallens/themes",
+    "Workspace/Fallens/themes",
+    "/storage/emulated/0/Delta/Workspace/Fallens/themes",
+    "/storage/emulated/0/Delta/Workspace/Fallens",
+}
+
+local function BackgroundScanFiles()
+    local choices = {"-- เลือกรูป --"}
+    BackgroundFileMap = {}
+    if type(listfiles) ~= "function" then
+        return choices
+    end
+    for _, folder in ipairs(BackgroundFolderCandidates) do
+        local ok, files = pcall(function() return listfiles(folder) end)
+        if ok and type(files) == "table" then
+            for _, path in ipairs(files) do
+                local lower = string.lower(tostring(path))
+                if lower:match("%.png$") or lower:match("%.jpg$") or lower:match("%.jpeg$") or lower:match("%.webp$") then
+                    local name = tostring(path):match("([^/\\\\]+)$") or tostring(path)
+                    if not BackgroundFileMap[name] then
+                        BackgroundFileMap[name] = tostring(path)
+                        table.insert(choices, name)
+                    end
+                end
+            end
+        end
+    end
+    return choices
+end
+
+local BackgroundImageDropdown
+local function BackgroundRefreshDropdown()
+    local choices = BackgroundScanFiles()
+    if BackgroundImageDropdown and type(BackgroundImageDropdown.SetValues) == "function" then
+        pcall(function() BackgroundImageDropdown:SetValues(choices) end)
+    end
+end
+
+BackgroundImageDropdown = BackgroundBox:AddDropdown("ZeroHubBackgroundImageSelect", {
+    Values = BackgroundScanFiles(),
+    Default = 1,
+    Multi = false,
+    Text = "เลือกรูปจากโฟลเดอร์ themes",
+    Callback = function(value)
+        if value and BackgroundFileMap[value] then
+            BackgroundLocalPath = BackgroundFileMap[value]
+        end
+    end
+})
+
+BackgroundBox:AddButton("รีเฟรชรายการรูป", function()
+    BackgroundRefreshDropdown()
+    pcall(function()
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = "Zero HUB • Background",
+            Text = "อัปเดตรายการไฟล์แล้ว หากไม่มีรูป ให้ตรวจโฟลเดอร์ themes",
+            Duration = 3
+        })
+    end)
+end)
+
+BackgroundBox:AddButton("ใช้รูปที่เลือก", function()
+    if BackgroundLocalPath == "" then
+        pcall(function()
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "Zero HUB • Background",
+                Text = "กรุณาเลือกรูปจากรายการก่อน",
+                Duration = 3
+            })
+        end)
+        return
+    end
+    task.spawn(function()
+        local ok, asset = pcall(function()
+            if type(getcustomasset) == "function" then
+                return getcustomasset(BackgroundLocalPath)
+            elseif type(getsynasset) == "function" then
+                return getsynasset(BackgroundLocalPath)
+            end
+            error("ตัวรันไม่มี getcustomasset/getsynasset")
+        end)
+        local applied = false
+        if ok and asset then
+            applied = pcall(function() BqN_WWxw0:SetBackgroundImage(asset) end)
+        end
+        pcall(function()
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "Zero HUB • Background",
+                Text = applied and "เปลี่ยนพื้นหลังแล้ว" or "โหลดรูปไม่สำเร็จ ตรวจตำแหน่งไฟล์และ API ของ Delta",
+                Duration = 4
+            })
+        end)
+    end)
+end)
+
+BackgroundBox:AddInput("ZeroHubBackgroundUrl", {
+    Text = "ลิงก์รูป (สำรอง)",
+    Default = "",
+    Placeholder = "https://.../image.png",
+    Numeric = false,
+    Finished = true,
+    Callback = function(value)
+        BackgroundUrl = tostring(value or "")
+    end
+})
+
+BackgroundBox:AddButton("ใช้รูปจากลิงก์", function()
+    if BackgroundUrl == "" then return end
+    local ok = pcall(function() BqN_WWxw0:SetBackgroundImage(BackgroundUrl) end)
+    if not ok then
+        pcall(function()
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "Zero HUB • Background",
+                Text = "ใช้ลิงก์นี้ไม่ได้",
+                Duration = 3
+            })
+        end)
+    end
+end)
+
+BackgroundBox:AddButton("คืนพื้นหลังเดิม", function()
+    pcall(function() BqN_WWxw0:SetBackgroundImage(BackgroundOriginal) end)
+end)
+
+local FakeNameBox = OnOquOxzu["UISettings"]:AddLeftGroupbox("ชื่อปลอม (HUD)", "user-round")
+local FakeNameValue = ""
+local FakeNameEnabled = false
+local FakeNameOriginals = setmetatable({}, {__mode = "k"})
+local FakeNameRunId = 0
+
+local function FakeNameIsTargetLabel(obj)
+    if not obj or not obj:IsA("TextLabel") then return false end
+    local text = tostring(obj.Text or "")
+    local player = game:GetService("Players").LocalPlayer
+    if not player then return false end
+    return text == player.Name or text == player.DisplayName
+        or text == string.lower(player.Name)
+        or text == string.lower(player.DisplayName)
+end
+
+local function FakeNameApplyToVisibleHud()
+    if not FakeNameEnabled or FakeNameValue == "" then return end
+    local player = game:GetService("Players").LocalPlayer
+    if not player then return end
+    local roots = {}
+    pcall(function() table.insert(roots, player:FindFirstChildOfClass("PlayerGui")) end)
+    pcall(function() table.insert(roots, game:GetService("CoreGui")) end)
+    for _, root in ipairs(roots) do
+        if root then
+            pcall(function()
+                for _, obj in ipairs(root:GetDescendants()) do
+                    if obj:IsA("TextLabel") then
+                        local current = tostring(obj.Text or "")
+                        if FakeNameIsTargetLabel(obj) then
+                            if FakeNameOriginals[obj] == nil then
+                                FakeNameOriginals[obj] = current
+                            end
+                            obj.Text = FakeNameValue
+                        elseif FakeNameOriginals[obj] ~= nil and current == FakeNameValue then
+                            -- Keep already-updated labels stable without touching unrelated text.
+                            obj.Text = FakeNameValue
+                        end
+                    end
+                end
+            end)
+        end
+    end
+end
+
+local function FakeNameRestoreHud()
+    FakeNameEnabled = false
+    FakeNameRunId += 1
+    for obj, original in pairs(FakeNameOriginals) do
+        pcall(function()
+            if obj and obj.Parent and obj:IsA("TextLabel") and obj.Text == FakeNameValue then
+                obj.Text = original
+            end
+        end)
+        FakeNameOriginals[obj] = nil
+    end
+end
+
+FakeNameBox:AddInput("ZeroHubFakeNameInput", {
+    Text = "ชื่อปลอม",
+    Default = "",
+    Placeholder = "ใส่ชื่อที่ต้องการ",
+    Numeric = false,
+    Finished = true,
+    Callback = function(value)
+        FakeNameValue = tostring(value or "")
+    end
+})
+
+FakeNameBox:AddButton("Apply ชื่อปลอม", function()
+    if FakeNameValue == "" then
+        pcall(function()
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "Zero HUB • Fake Name",
+                Text = "กรุณาใส่ชื่อก่อน",
+                Duration = 3
+            })
+        end)
+        return
+    end
+    FakeNameEnabled = true
+    FakeNameRunId += 1
+    local thisRun = FakeNameRunId
+    task.spawn(function()
+        while FakeNameEnabled and FakeNameRunId == thisRun do
+            FakeNameApplyToVisibleHud()
+            task.wait(0.5)
+        end
+    end)
+end)
+
+FakeNameBox:AddButton("Reset ชื่อเดิม", function()
+    FakeNameRestoreHud()
+end)
+ local vNvNwM_1w = OnOquOxzu [ "Combat" ] : AddRightGroupbox("เดินถอยหลัง"  , "user"  ) local OqonUMnOp= OnOquOxzu [ "Combat"  ] : AddRightGroupbox("ย่อตัวอัตโนมัติ (Abyss)" ,"user" )local qmoNOXxnbpqI =OnOquOxzu["Killer" ] : AddLeftGroupbox ("หอกเงียบ (Veil)" , "ghost" )local BonmDqZ =OnOquOxzu [ "Killer" ]  : AddRightGroupbox ("ความสามารถฆาตกร" ,"skull" )
+local Qu_DllDmwuuI= OnOquOxzu["Visual" ] :AddLeftGroupbox ("แสดงข้อมูลสิ่งมีชีวิต" ,"eye" )local  lZ0owHZMOqIImb=OnOquOxzu [ "Visual"  ] : AddLeftGroupbox("ตั้งค่าการแสดงข้อมูลผู้เล่น" ,"eye" )local boqNXvwmX= OnOquOxzu [ "Visual" ]  :AddRightGroupbox( "แสดงข้อมูลวัตถุ" ,"map" )local qpbZM=OnOquOxzu["Combat" ]  : AddRightGroupbox ("ล็อกมุมมอง" , "eye" ) local FollowBox=OnOquOxzu["Follow"]:AddLeftGroupbox("ติดตาม / วาร์ป","users")
+local ZeroFlyBox=OnOquOxzu["Follow"]:AddRightGroupbox("ระบบบิน","plane")
+local MusicBox=OnOquOxzu["Music"]:AddLeftGroupbox("เครื่องเล่นเพลง","music")
+local MusicSound=Instance.new("Sound")
+MusicSound.Name="ZeroHubMusic"
+MusicSound.Volume=0.5
+MusicSound.Looped=false
+MusicSound.PlayOnRemove=false
+MusicSound.Parent=game:GetService("SoundService")
+local MusicId=""
+local ContentProvider=game:GetService("ContentProvider")
+
+MusicBox:AddInput("MusicAudioId",{Text="รหัสเสียง Roblox",Default="",Placeholder="ใส่รหัสเสียง",Numeric=true,Finished=false,Callback=function(v)
+    local id=tostring(v or ""):match("%d+")
+    if id then
+        MusicId=id
+        MusicSound:Stop()
+        MusicSound.TimePosition=0
+        MusicSound.SoundId="rbxassetid://"..id
+    end
+end})
+
+MusicBox:AddButton("▶ เล่น",function()
+    if MusicId=="" or MusicSound.SoundId=="" then
+        pcall(function() game:GetService("StarterGui"):SetCore("SendNotification",{Title="เพลง",Text="กรุณาใส่รหัสเสียงก่อน",Duration=3}) end)
+        return
+    end
+    MusicSound:Stop()
+    MusicSound.TimePosition=0
+    local ok=pcall(function()
+        ContentProvider:PreloadAsync({MusicSound})
+    end)
+    if not ok then
+        pcall(function() game:GetService("StarterGui"):SetCore("SendNotification",{Title="เพลง",Text="โหลดเพลงไม่สำเร็จ — รหัสอาจใช้ไม่ได้หรือเพลงไม่อนุญาตให้ใช้",Duration=5}) end)
+        return
+    end
+    task.wait(0.15)
+    MusicSound:Play()
+end)
+
+MusicBox:AddButton("⏸ หยุดชั่วคราว",function()
+    if MusicSound.IsPlaying then MusicSound:Pause() end
+end)
+
+MusicBox:AddButton("⏹ หยุด",function()
+    MusicSound:Stop()
+    MusicSound.TimePosition=0
+end)
+
+MusicBox:AddToggle("MusicLoop",{Text="วนซ้ำ",Default=false,Callback=function(v)
+    MusicSound.Looped=v
+end})
+
+MusicBox:AddSlider("MusicVolume",{Text="ระดับเสียง",Default=0.5,Min=0,Max=1,Rounding=2,Compact=false,Callback=function(v)
+    MusicSound.Volume=tonumber(v) or 0.5
+end})local WIDWH=game [ "GetService" ] ( game ,"Players" )local WwNbnqHIQwppl = game ["GetService" ] ( game,"RunService"  )local M_QbbvZ0IU = game ["GetService" ] (game, "UserInputService"  )local oZzw1oZIXX_ =game ["GetService"  ] (game,"ReplicatedStorage" )local wxl1Uo1UbDnnb=game["GetService" ] ( game, "Workspace"  ) local QlMQp =game [ "GetService" ] (game,"VirtualInputManager"  )local pumZMHmIxqDun =game ["GetService" ] ( game , "GuiService" )local  pmDxuq1Qvl =game["GetService" ] ( game ,"CollectionService" )local Q_qlzpNO1 = WIDWH[ "LocalPlayer"  ] local oZubzuHwUUDMv =wxl1Uo1UbDnnb["CurrentCamera" ]
+
+-- =====================================================
+-- ZERO HUB: Role Notification
+-- แจ้งเตือนเมื่อผู้เล่นได้เป็น Killer หรือ Survivors
+-- =====================================================
+local ZeroRoleLast = nil
+local function ZeroRoleNotify(role)
+    if role == "Killer" then
+        pcall(function()
+            NuD1bHO_vv:SetCore("SendNotification", {
+                Title = "Zero_HUB",
+                Text = "🔪 คุณได้เป็นฆาตกร",
+                Icon = "rbxassetid://124116752283304",
+                Duration = 4
+            })
+        end)
+    elseif role == "Survivors" then
+        pcall(function()
+            NuD1bHO_vv:SetCore("SendNotification", {
+                Title = "Zero_HUB",
+                Text = "🛡️ คุณได้เป็นผู้รอดชีวิต",
+                Icon = "rbxassetid://124116752283304",
+                Duration = 4
+            })
+        end)
+    end
+end
+
+local function ZeroCheckRole()
+    local team = Q_qlzpNO1.Team
+    local role = team and team.Name or nil
+    if role ~= ZeroRoleLast then
+        ZeroRoleLast = role
+        ZeroRoleNotify(role)
+    end
+end
+
+Q_qlzpNO1:GetPropertyChangedSignal("Team"):Connect(ZeroCheckRole)
+task.spawn(function()
+    task.wait(1)
+    ZeroCheckRole()
+    while task.wait(1) do
+        ZeroCheckRole()
+    end
+end)
+-- =====================================================
+-- KILLER COMBAT PACK
+-- Auto Attack + Beat Killer (auto kill) + Hitbox Expand
+-- Ported from Violence-District.lua
+-- =====================================================
+local ZeroCombat = { AutoAttack=false, AutoAttackRange=12, HitboxExpand=false, HitboxSize=15, BeatKiller=false, Target=nil }
+local ZeroOriginalHitboxes = {}
+local ZeroLastBasicAttack = 0
+
+local function ZeroGetTeamName(player) return player and player.Team and player.Team.Name or nil end
+local function ZeroIsKiller() return ZeroGetTeamName(Q_qlzpNO1) == "Killer" end
+local function ZeroIsSurvivor(player) return player and player ~= Q_qlzpNO1 and ZeroGetTeamName(player) == "Survivors" end
+local function ZeroGetRoot(player) local c=player and player.Character return c and c:FindFirstChild("HumanoidRootPart") end
+local function ZeroGetHumanoid(player) local c=player and player.Character return c and c:FindFirstChildOfClass("Humanoid") end
+
+local function ZeroAttack()
+    local now=os.clock()
+    if now-ZeroLastBasicAttack < 0.12 then return end
+    ZeroLastBasicAttack=now
+    pcall(function()
+        local remotes=oZzw1oZIXX_:FindFirstChild("Remotes")
+        local attacks=remotes and remotes:FindFirstChild("Attacks")
+        local basicAttack=attacks and attacks:FindFirstChild("BasicAttack")
+        if basicAttack then basicAttack:FireServer(false) end
+    end)
+end
+
+local function ZeroAutoAttackTick()
+    if not ZeroCombat.AutoAttack or not ZeroIsKiller() then return end
+    local myRoot=ZeroGetRoot(Q_qlzpNO1)
+    if not myRoot then return end
+    for _,player in ipairs(WIDWH:GetPlayers()) do
+        if ZeroIsSurvivor(player) then
+            local tr=ZeroGetRoot(player)
+            local hum=ZeroGetHumanoid(player)
+            if tr and hum and hum.MaxHealth>0 and hum.Health>0 then
+                local pct=hum.Health/hum.MaxHealth
+                if pct>0.25 and (tr.Position-myRoot.Position).Magnitude<=ZeroCombat.AutoAttackRange then
+                    ZeroAttack()
+                    break
+                end
+            end
+        end
+    end
+end
+
+local function ZeroBeatKillerTick()
+    if not ZeroCombat.BeatKiller or not ZeroIsKiller() then ZeroCombat.Target=nil return end
+    local myRoot=ZeroGetRoot(Q_qlzpNO1)
+    if not myRoot then return end
+    local target=ZeroCombat.Target
+    local th=target and ZeroGetHumanoid(target)
+    if not target or not ZeroIsSurvivor(target) or not th or th.MaxHealth<=0 or (th.Health/th.MaxHealth)<=0.25 then
+        target=nil
+        local closest,closestDistance=nil,math.huge
+        for _,player in ipairs(WIDWH:GetPlayers()) do
+            if ZeroIsSurvivor(player) then
                 local tr=ZeroGetRoot(player)
                 local hum=ZeroGetHumanoid(player)
                 if tr and hum and hum.MaxHealth>0 and (hum.Health/hum.MaxHealth)>0.25 then
