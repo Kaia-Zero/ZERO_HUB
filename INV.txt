@@ -1,0 +1,547 @@
+local env = (typeof(getgenv) == "function" and getgenv()) or _G
+if typeof(env.__deepdesync_unload) == "function" then
+	pcall(env.__deepdesync_unload)
+end
+if typeof(env.__undermap_unload) == "function" then
+	pcall(env.__undermap_unload)
+end
+
+local Config = {
+	Enabled = false,
+	-- Studs below the floor the raycast hits. Raise this if the server
+	-- body still clips the surface.
+	Depth = 5,
+	-- Never report a Y at or below FallenPartsDestroyHeight + this.
+	SafeMargin = 30,
+	-- How fast the reported Y is allowed to sink (studs/sec). 0 snaps.
+	MaxSinkSpeed = 200,
+	-- true: server XZ follows you, only Y is a lie.
+	-- false: server XZ freezes where you were when this turned on.
+	FollowHorizontal = true,
+}
+
+local function service(name)
+	local got = game:GetService(name)
+	if typeof(cloneref) == "function" then
+		local ok, cloned = pcall(cloneref, got)
+		if ok and cloned then
+			return cloned
+		end
+	end
+	return got
+end
+
+local Players = service("Players")
+local RunService = service("RunService")
+local UserInputService = service("UserInputService")
+local Workspace = service("Workspace")
+
+local player = Players.LocalPlayer
+if not player then
+	player = Players.PlayerAdded:Wait()
+end
+
+local BIND = "DeepDesyncRestore"
+local alive = true
+local enabled = Config.Enabled == true
+
+local state = {
+	real = nil,
+	vel = nil,
+	ang = nil,
+	fakePos = nil,
+	spoofed = false,
+	lockXZ = nil,
+}
+local reportedY = nil
+
+local rayParams = RaycastParams.new()
+rayParams.FilterType = Enum.RaycastFilterType.Exclude
+rayParams.IgnoreWater = true
+
+local groundCache = {
+	x = 0,
+	z = 0,
+	y = nil,
+	at = 0,
+}
+
+local connections = {}
+local statusLabel
+local detailLabel
+local switchButton
+local screenGui
+
+local function approach(current, target, maxDelta)
+	local delta = target - current
+	if delta > maxDelta then
+		return current + maxDelta
+	end
+	if delta < -maxDelta then
+		return current - maxDelta
+	end
+	return target
+end
+
+local function findRoot(character)
+	character = character or player.Character
+	if not character then
+		return nil, nil
+	end
+	local humanoid = character:FindFirstChildOfClass("Humanoid")
+	local root = (humanoid and humanoid.RootPart) or character:FindFirstChild("HumanoidRootPart")
+	if root and root:IsA("BasePart") then
+		return root, humanoid
+	end
+	return nil, humanoid
+end
+
+local function usableRoot()
+	local character = player.Character
+	local root, humanoid = findRoot(character)
+	if not root or not humanoid then
+		return nil
+	end
+	if humanoid.Health <= 0 or humanoid.SeatPart then
+		return nil
+	end
+	return root, character
+end
+
+local function surfaceY(x, z, fromY, character)
+	local now = os.clock()
+	local dx = x - groundCache.x
+	local dz = z - groundCache.z
+	if groundCache.at > 0 and (dx * dx + dz * dz) < 36 and (now - groundCache.at) < 0.2 then
+		return groundCache.y
+	end
+	rayParams.FilterDescendantsInstances = { character }
+	local ok, hit = pcall(function()
+		return Workspace:Raycast(Vector3.new(x, fromY, z), Vector3.new(0, -4000, 0), rayParams)
+	end)
+	local y = (ok and hit) and hit.Position.Y or nil
+	groundCache.x = x
+	groundCache.z = z
+	groundCache.y = y
+	groundCache.at = now
+	return y
+end
+
+local function targetY(realPos, character)
+	local surface = surfaceY(realPos.X, realPos.Z, realPos.Y, character)
+	local desired = (surface or realPos.Y) - Config.Depth
+	local destroyAt = Workspace.FallenPartsDestroyHeight
+	if destroyAt ~= destroyAt or destroyAt == math.huge or destroyAt == -math.huge then
+		destroyAt = -500
+	end
+	return math.max(desired, destroyAt + Config.SafeMargin)
+end
+
+local function updateGui()
+	if not statusLabel or not detailLabel or not switchButton then
+		return
+	end
+	if not enabled then
+		switchButton.Text = "OFF"
+		switchButton.BackgroundColor3 = Color3.fromRGB(62, 62, 68)
+		statusLabel.Text = "server sees your real position"
+		statusLabel.TextColor3 = Color3.fromRGB(196, 196, 202)
+		detailLabel.Text = "click ON to put the server under the floor"
+		return
+	end
+	switchButton.Text = "ON"
+	switchButton.BackgroundColor3 = Color3.fromRGB(32, 138, 78)
+	statusLabel.Text = "server position is under the floor"
+	statusLabel.TextColor3 = Color3.fromRGB(126, 214, 152)
+	if state.real and reportedY then
+		detailLabel.Text = string.format("you Y %.0f     server Y %.0f", state.real.Y, reportedY)
+	else
+		detailLabel.Text = "waiting for a live character"
+	end
+end
+
+local function restore()
+	if not state.spoofed or not state.real then
+		state.spoofed = false
+		return
+	end
+	local root = findRoot()
+	state.spoofed = false
+	if not root then
+		return
+	end
+	root.CFrame = state.real
+	root.AssemblyLinearVelocity = state.vel or Vector3.zero
+	root.AssemblyAngularVelocity = state.ang or Vector3.zero
+end
+
+local function punch()
+	local root = findRoot()
+	if not root or not state.real or reportedY == nil then
+		return
+	end
+	local realCF = state.real
+	local x, z
+	if Config.FollowHorizontal then
+		x, z = realCF.X, realCF.Z
+	else
+		if not state.lockXZ then
+			state.lockXZ = Vector3.new(realCF.X, 0, realCF.Z)
+		end
+		x, z = state.lockXZ.X, state.lockXZ.Z
+	end
+	local fake = CFrame.new(x, reportedY, z) * realCF.Rotation
+	root.CFrame = fake
+	root.AssemblyLinearVelocity = state.vel or Vector3.zero
+	root.AssemblyAngularVelocity = state.ang or Vector3.zero
+	if typeof(sethiddenproperty) == "function" then
+		pcall(sethiddenproperty, root, "NetworkIsSleeping", false)
+	end
+	state.fakePos = fake.Position
+	state.spoofed = true
+end
+
+local function advance(dt)
+	local root, character = usableRoot()
+	if not root then
+		if state.spoofed then
+			local part = findRoot()
+			if part and state.real and state.fakePos and (part.Position - state.fakePos).Magnitude < 8 then
+				part.CFrame = state.real
+				part.AssemblyLinearVelocity = state.vel or Vector3.zero
+				part.AssemblyAngularVelocity = state.ang or Vector3.zero
+			end
+		end
+		state.spoofed = false
+		reportedY = nil
+		state.lockXZ = nil
+		groundCache.at = 0
+		return false
+	end
+
+	local pos = root.Position
+	local stillFake = state.spoofed and state.fakePos and (pos - state.fakePos).Magnitude < 8
+	if not stillFake then
+		state.real = root.CFrame
+		state.vel = root.AssemblyLinearVelocity
+		state.ang = root.AssemblyAngularVelocity
+	end
+	if not state.real then
+		return false
+	end
+
+	dt = math.clamp(dt or (1 / 60), 0, 0.1)
+	if reportedY == nil then
+		reportedY = state.real.Y
+	end
+	local goal = targetY(state.real.Position, character)
+	if Config.MaxSinkSpeed <= 0 then
+		reportedY = goal
+	else
+		reportedY = approach(reportedY, goal, Config.MaxSinkSpeed * dt)
+	end
+	return true
+end
+
+local function onPostSimulation(dt)
+	if not alive or not enabled then
+		return
+	end
+	if not advance(dt) then
+		updateGui()
+		return
+	end
+	punch()
+	updateGui()
+	task.defer(function()
+		if not alive or not enabled or not state.spoofed then
+			return
+		end
+		punch()
+	end)
+end
+
+local function onPreRender()
+	if not alive or not enabled then
+		return
+	end
+	restore()
+end
+
+local postSim = RunService.PostSimulation or RunService.Heartbeat
+connections[#connections + 1] = postSim:Connect(onPostSimulation)
+
+local bound = false
+local bindOk = pcall(function()
+	RunService:BindToRenderStep(BIND, Enum.RenderPriority.First.Value, onPreRender)
+	bound = true
+end)
+if not bindOk then
+	local pre = RunService.PreRender or RunService.RenderStepped
+	connections[#connections + 1] = pre:Connect(onPreRender)
+end
+
+connections[#connections + 1] = player.CharacterAdded:Connect(function()
+	reportedY = nil
+	state.real = nil
+	state.vel = nil
+	state.ang = nil
+	state.fakePos = nil
+	state.spoofed = false
+	state.lockXZ = nil
+	groundCache.at = 0
+end)
+
+connections[#connections + 1] = UserInputService.InputBegan:Connect(function(input)
+	if not alive then
+		return
+	end
+	if UserInputService:GetFocusedTextBox() then
+		return
+	end
+	if input.KeyCode == Enum.KeyCode.Q then
+		env.DeepDesync.Toggle()
+	elseif input.KeyCode == Enum.KeyCode.End then
+		env.DeepDesync.Unload()
+	end
+end)
+
+local function mount(gui)
+	if typeof(syn) == "table" and typeof(syn.protect_gui) == "function" then
+		pcall(syn.protect_gui, gui)
+	end
+	if typeof(gethui) == "function" then
+		local ok, parent = pcall(gethui)
+		if ok and typeof(parent) == "Instance" then
+			gui.Parent = parent
+			return
+		end
+	end
+	local ok = pcall(function()
+		gui.Parent = service("CoreGui")
+	end)
+	if ok and gui.Parent then
+		return
+	end
+	local playerGui = player:FindFirstChildOfClass("PlayerGui") or player:WaitForChild("PlayerGui")
+	gui.Parent = playerGui
+end
+
+local function buildGui()
+	local function sweep(parent)
+		if typeof(parent) ~= "Instance" then
+			return
+		end
+		local old = parent:FindFirstChild("DeepDesync")
+		if old then
+			old:Destroy()
+		end
+		local older = parent:FindFirstChild("UnderMap")
+		if older then
+			older:Destroy()
+		end
+	end
+	if typeof(gethui) == "function" then
+		local ok, parent = pcall(gethui)
+		if ok then
+			sweep(parent)
+		end
+	end
+	pcall(function()
+		sweep(service("CoreGui"))
+	end)
+	local playerGui = player:FindFirstChildOfClass("PlayerGui")
+	sweep(playerGui)
+
+	screenGui = Instance.new("ScreenGui")
+	screenGui.Name = "DeepDesync"
+	screenGui.ResetOnSpawn = false
+	screenGui.IgnoreGuiInset = true
+	screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+	screenGui.DisplayOrder = 100000
+
+	local frame = Instance.new("Frame")
+	frame.Name = "Panel"
+	frame.AnchorPoint = Vector2.new(0.5, 0)
+	frame.Position = UDim2.new(0.5, 0, 0, 18)
+	frame.Size = UDim2.fromOffset(320, 108)
+	frame.BackgroundColor3 = Color3.fromRGB(18, 18, 20)
+	frame.BorderSizePixel = 0
+	frame.Active = true
+	frame.Parent = screenGui
+
+	local corner = Instance.new("UICorner")
+	corner.CornerRadius = UDim.new(0, 10)
+	corner.Parent = frame
+
+	local stroke = Instance.new("UIStroke")
+	stroke.Color = Color3.fromRGB(58, 58, 64)
+	stroke.Thickness = 1
+	stroke.Parent = frame
+
+	local title = Instance.new("TextLabel")
+	title.Name = "Title"
+	title.BackgroundTransparency = 1
+	title.Position = UDim2.fromOffset(14, 12)
+	title.Size = UDim2.new(1, -110, 0, 22)
+	title.Font = Enum.Font.GothamMedium
+	title.TextSize = 16
+	title.TextXAlignment = Enum.TextXAlignment.Left
+	title.TextColor3 = Color3.fromRGB(244, 244, 246)
+	title.Text = "Deep Desync"
+	title.Parent = frame
+
+	switchButton = Instance.new("TextButton")
+	switchButton.Name = "Toggle"
+	switchButton.AnchorPoint = Vector2.new(1, 0)
+	switchButton.Position = UDim2.new(1, -12, 0, 12)
+	switchButton.Size = UDim2.fromOffset(72, 28)
+	switchButton.Font = Enum.Font.GothamBold
+	switchButton.TextSize = 14
+	switchButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+	switchButton.Text = "OFF"
+	switchButton.BackgroundColor3 = Color3.fromRGB(62, 62, 68)
+	switchButton.BorderSizePixel = 0
+	switchButton.AutoButtonColor = true
+	switchButton.Parent = frame
+
+	local switchCorner = Instance.new("UICorner")
+	switchCorner.CornerRadius = UDim.new(0, 8)
+	switchCorner.Parent = switchButton
+
+	statusLabel = Instance.new("TextLabel")
+	statusLabel.Name = "Status"
+	statusLabel.BackgroundTransparency = 1
+	statusLabel.Position = UDim2.fromOffset(14, 44)
+	statusLabel.Size = UDim2.new(1, -28, 0, 18)
+	statusLabel.Font = Enum.Font.Gotham
+	statusLabel.TextSize = 13
+	statusLabel.TextXAlignment = Enum.TextXAlignment.Left
+	statusLabel.TextColor3 = Color3.fromRGB(196, 196, 202)
+	statusLabel.Text = ""
+	statusLabel.Parent = frame
+
+	detailLabel = Instance.new("TextLabel")
+	detailLabel.Name = "Detail"
+	detailLabel.BackgroundTransparency = 1
+	detailLabel.Position = UDim2.fromOffset(14, 66)
+	detailLabel.Size = UDim2.new(1, -28, 0, 18)
+	detailLabel.Font = Enum.Font.Gotham
+	detailLabel.TextSize = 13
+	detailLabel.TextXAlignment = Enum.TextXAlignment.Left
+	detailLabel.TextColor3 = Color3.fromRGB(150, 150, 158)
+	detailLabel.Text = ""
+	detailLabel.Parent = frame
+
+	local hint = Instance.new("TextLabel")
+	hint.Name = "Hint"
+	hint.BackgroundTransparency = 1
+	hint.Position = UDim2.fromOffset(14, 86)
+	hint.Size = UDim2.new(1, -28, 0, 14)
+	hint.Font = Enum.Font.Gotham
+	hint.TextSize = 11
+	hint.TextXAlignment = Enum.TextXAlignment.Left
+	hint.TextColor3 = Color3.fromRGB(110, 110, 118)
+	hint.Text = "Q toggles    End closes"
+	hint.Parent = frame
+
+	switchButton.MouseButton1Click:Connect(function()
+		if alive and env.DeepDesync then
+			env.DeepDesync.Toggle()
+		end
+	end)
+
+	local dragging = false
+	local dragStart
+	local startPos
+	title.Active = true
+	title.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+			dragging = true
+			dragStart = input.Position
+			startPos = frame.Position
+		end
+	end)
+	title.InputEnded:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+			dragging = false
+		end
+	end)
+	connections[#connections + 1] = UserInputService.InputChanged:Connect(function(input)
+		if not dragging or not startPos or not dragStart then
+			return
+		end
+		if input.UserInputType ~= Enum.UserInputType.MouseMovement and input.UserInputType ~= Enum.UserInputType.Touch then
+			return
+		end
+		local delta = input.Position - dragStart
+		frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+	end)
+
+	mount(screenGui)
+	updateGui()
+end
+
+local api = {}
+
+function api.Toggle()
+	if not alive then
+		return
+	end
+	enabled = not enabled
+	if not enabled then
+		restore()
+		reportedY = nil
+		state.lockXZ = nil
+		state.spoofed = false
+	end
+	updateGui()
+end
+
+function api.Unload()
+	if not alive then
+		return
+	end
+	alive = false
+	enabled = false
+	restore()
+	for _, connection in connections do
+		connection:Disconnect()
+	end
+	table.clear(connections)
+	if bound then
+		pcall(function()
+			RunService:UnbindFromRenderStep(BIND)
+		end)
+		bound = false
+	end
+	if screenGui then
+		screenGui:Destroy()
+		screenGui = nil
+	end
+	statusLabel = nil
+	detailLabel = nil
+	switchButton = nil
+	if env.DeepDesync == api then
+		env.DeepDesync = nil
+	end
+	if env.UnderMap == api then
+		env.UnderMap = nil
+	end
+	if env.__deepdesync_unload == api.Unload then
+		env.__deepdesync_unload = nil
+	end
+	if env.__undermap_unload == api.Unload then
+		env.__undermap_unload = nil
+	end
+end
+
+api.Config = Config
+env.DeepDesync = api
+env.UnderMap = api
+env.__deepdesync_unload = api.Unload
+env.__undermap_unload = api.Unload
+
+buildGui()
+
+print("[Deep Desync] panel is at the top of the screen. Click ON or press Q. End closes.")
